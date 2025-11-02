@@ -430,9 +430,9 @@ export default function RegisterProvider() {
               </label>
             </div>
             
-            {formData.emergencyWork && (
+            {/* {formData.emergencyWork && (
               <div className="form-group">
-                {/* <label htmlFor="emergencyCharge" className="form-label">Emergency Charge</label> */}
+                <label htmlFor="emergencyCharge" className="form-label">Emergency Charge</label>
                 <input
                   id="emergencyCharge"
                   type="number"
@@ -442,7 +442,7 @@ export default function RegisterProvider() {
                   onChange={e => updateFormData('emergencyCharge', parseInt(e.target.value))}
                 />
               </div>
-            )}
+            )} */}
 
             {/* Service Pricing Section */}
             <div className="form-section">
@@ -464,36 +464,7 @@ export default function RegisterProvider() {
                 />
                 <small className="form-help">This is your base price for the service (minimum ₹1)</small>
               </div>
-
-              <div className="form-group">
-                {/* <label htmlFor="pricePerHour" className="form-label">Hourly Rate (Optional)</label> */}
-                <input
-                  id="pricePerHour"
-                  type="number"
-                  className="form-input"
-                  placeholder="Enter hourly rate if applicable"
-                  value={formData.pricePerHour ? (formData.pricePerHour / 100) : 0} // Convert paise to rupees for display
-                  onChange={(e) => updateFormData('pricePerHour', Math.round(parseFloat(e.target.value || 0) * 100) || 0)}
-                  min="0"
-                  step="0.01"
-                />
-                <small className="form-help">Leave empty if you only charge a fixed rate</small>
-              </div>
-
-              <div className="form-group">
-                {/* <label htmlFor="minimumCharge" className="form-label">Minimum Charge (Optional)</label> */}
-                <input
-                  id="minimumCharge"
-                  type="number"
-                  className="form-input"
-                  placeholder="Enter minimum charge for any service"
-                  value={formData.minimumCharge ? (formData.minimumCharge / 100) : 0} // Convert paise to rupees for display
-                  onChange={(e) => updateFormData('minimumCharge', Math.round(parseFloat(e.target.value || 0) * 100) || 0)}
-                  min="0"
-                  step="0.01"
-                />
-                <small className="form-help">Minimum amount you'll charge regardless of service duration</small>
-              </div>
+              
 
               <div className="pricing-info">
                 <div className="info-card">
