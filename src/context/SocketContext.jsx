@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-import { useAuth } from './AuthContext';
+import { createContext, useContext, useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext();
 
@@ -11,50 +11,61 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     if (token && user) {
-      // Connect to WebSocket server
-      const newSocket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_ORIGIN || 'http://localhost:4000', {
-        auth: { token }
+      // ✅ Determine backend socket URL
+      const backendUrl =
+        import.meta.env.VITE_SOCKET_URL ||
+        import.meta.env.VITE_API_ORIGIN ||
+        "https://flexify-backend-wnsx.onrender.com";
+
+      // ✅ Connect to the backend socket
+      const newSocket = io(backendUrl, {
+        transports: ["websocket"],
+        withCredentials: true,
+        auth: { token },
       });
 
-      newSocket.on('connect', () => {
-        console.log('Connected to WebSocket server');
-        // Ask for notification permission on first connect
-        if ('Notification' in window && Notification.permission === 'default') {
+      newSocket.on("connect", () => {
+        console.log("✅ Connected to WebSocket server:", backendUrl);
+
+        // Ask for browser notification permission once
+        if ("Notification" in window && Notification.permission === "default") {
           Notification.requestPermission().catch(() => {});
         }
-        
-        // Join appropriate room based on user role
-        if (user.role === 'provider') {
-          newSocket.emit('join-provider-room');
-        } else if (user.role === 'user') {
-          newSocket.emit('join-user-room');
+
+        // Join the appropriate room based on user role
+        if (user.role === "provider") {
+          newSocket.emit("join-provider-room");
+        } else if (user.role === "user") {
+          newSocket.emit("join-user-room");
         }
       });
 
-      newSocket.on('connect_error', (err) => {
-        console.error('WebSocket connection error:', err?.message || err);
+      newSocket.on("connect_error", (err) => {
+        console.error("❌ WebSocket connection error:", err?.message || err);
       });
 
-      newSocket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket server');
+      newSocket.on("disconnect", () => {
+        console.log("🔌 Disconnected from WebSocket server");
       });
 
-      // Handle real-time notifications
-      newSocket.on('new-booking', (data) => {
-        console.log('Socket event: new-booking', data)
+      // 🔔 Handle incoming events
+      newSocket.on("new-booking", (data) => {
+        console.log("📦 New booking event:", data);
         addNotification(data);
       });
 
-      newSocket.on('booking-status-update', (data) => {
-        console.log('Socket event: booking-status-update', data)
+      newSocket.on("booking-status-update", (data) => {
+        console.log("📢 Booking status update:", data);
         addNotification(data);
       });
 
-      newSocket.on('payment-confirmed', (data) => {
+      newSocket.on("payment-confirmed", (data) => {
+        console.log("💸 Payment confirmed:", data);
         addNotification(data);
       });
 
-      newSocket.on('payment-received', (data) => {
+      newSocket.on("payment-received", (data) => {
+        console.log("💰 Payment received:", data);
         addNotification(data);
       });
 
@@ -66,26 +77,26 @@ export function SocketProvider({ children }) {
     }
   }, [token, user]);
 
+  // 🔔 Notification helpers
   const addNotification = (notification) => {
     const newNotification = {
       id: Date.now(),
       timestamp: new Date(),
-      ...notification
+      ...notification,
     };
-    
-    setNotifications(prev => [newNotification, ...prev.slice(0, 9)]); // Keep last 10 notifications
-    
-    // Show browser notification if supported
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Flexify', {
+
+    setNotifications((prev) => [newNotification, ...prev.slice(0, 9)]); // keep last 10
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Flexify", {
         body: notification.message,
-        icon: '/favicon.ico'
+        icon: "/favicon.ico",
       });
     }
   };
 
   const clearNotification = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
   const clearAllNotifications = () => {
@@ -93,11 +104,11 @@ export function SocketProvider({ children }) {
   };
 
   const requestNotificationPermission = async () => {
-    if ('Notification' in window && Notification.permission === 'default') {
+    if ("Notification" in window && Notification.permission === "default") {
       const permission = await Notification.requestPermission();
-      return permission === 'granted';
+      return permission === "granted";
     }
-    return Notification.permission === 'granted';
+    return Notification.permission === "granted";
   };
 
   const value = {
@@ -106,7 +117,7 @@ export function SocketProvider({ children }) {
     addNotification,
     clearNotification,
     clearAllNotifications,
-    requestNotificationPermission
+    requestNotificationPermission,
   };
 
   return (
@@ -119,7 +130,7 @@ export function SocketProvider({ children }) {
 export function useSocket() {
   const context = useContext(SocketContext);
   if (!context) {
-    throw new Error('useSocket must be used within a SocketProvider');
+    throw new Error("useSocket must be used within a SocketProvider");
   }
   return context;
 }
