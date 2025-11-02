@@ -18,7 +18,7 @@ export default function RegisterProvider() {
     skillTestCompleted: false,
     serviceRadius: 10,
     emergencyWork: false,
-    emergencyCharge: 0,
+    emergencyCharge: 100,
     // Service Pricing
     servicePrice: 500, // Default ₹5.00 in paise
     pricePerHour: 0,
@@ -432,7 +432,7 @@ export default function RegisterProvider() {
             
             {formData.emergencyWork && (
               <div className="form-group">
-                <label htmlFor="emergencyCharge" className="form-label">Emergency Charge</label>
+                {/* <label htmlFor="emergencyCharge" className="form-label">Emergency Charge</label> */}
                 <input
                   id="emergencyCharge"
                   type="number"
@@ -466,7 +466,7 @@ export default function RegisterProvider() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="pricePerHour" className="form-label">Hourly Rate (Optional)</label>
+                {/* <label htmlFor="pricePerHour" className="form-label">Hourly Rate (Optional)</label> */}
                 <input
                   id="pricePerHour"
                   type="number"
@@ -481,7 +481,7 @@ export default function RegisterProvider() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="minimumCharge" className="form-label">Minimum Charge (Optional)</label>
+                {/* <label htmlFor="minimumCharge" className="form-label">Minimum Charge (Optional)</label> */}
                 <input
                   id="minimumCharge"
                   type="number"
