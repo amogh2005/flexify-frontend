@@ -164,7 +164,7 @@ export default function AdminProviders() {
                     {provider.idDocumentUrl && (
                       <div className="document-actions">
                         <a 
-                          href={`http://localhost:4000${provider.idDocumentUrl}`}
+                          href={provider.idDocumentUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-outline btn-sm"
