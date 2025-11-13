@@ -163,14 +163,15 @@ export default function AdminProviders() {
                     </p>
                     {provider.idDocumentUrl && (
                       <div className="document-actions">
-                        <a 
-                          href={provider.idDocumentUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
                           className="btn btn-outline btn-sm"
+                          onClick={() =>
+                            window.open(provider.idDocumentUrl, "_blank", "noopener,noreferrer")
+                          }
                         >
                           📄 View ID Document
-                        </a>
+                        </button>
+
                       </div>
                     )}
                   </div>

@@ -30,6 +30,7 @@ export default function UserBooking() {
     surgeMultiplier: 1,
     insuranceCost: 0,
     totalPrice: 0,
+    urgencyExtra: 0,
     
     // Worker Selection
     selectedWorker: null,
@@ -62,7 +63,7 @@ export default function UserBooking() {
   const mapRef = useRef()
   const chatbotRef = useRef()
 
-  const totalSteps = 5
+  const totalSteps = 4
   // Initialize from Services page selections
   useEffect(() => {
     const st = location.state || {}
@@ -148,33 +149,27 @@ export default function UserBooking() {
   }
 
   const calculatePricing = () => {
-    const category = serviceCategories[bookingData.serviceCategory]
-    if (!category) return
-
-    let basePrice = category.basePrice * durationOptions.find(d => d.value === bookingData.duration)?.multiplier || 1
-    let surgeMultiplier = 1
-
-    // Surge pricing based on time and demand
-    const hour = new Date().getHours()
-    if (hour >= 7 && hour <= 9) surgeMultiplier = 1.3 // Morning rush
-    if (hour >= 17 && hour <= 19) surgeMultiplier = 1.4 // Evening rush
-    if (hour >= 22 || hour <= 6) surgeMultiplier = 1.5 // Night premium
-
-    // Urgency multiplier
-    const urgencyMultiplier = urgencyLevels.find(u => u.value === bookingData.urgency)?.multiplier || 1
-
-    const finalBasePrice = basePrice * surgeMultiplier * urgencyMultiplier
-    const insuranceCost = bookingData.insuranceRequired ? finalBasePrice * 0.1 : 0
-    const totalPrice = finalBasePrice + insuranceCost
-
+    const category = serviceCategories[bookingData.serviceCategory];
+    if (!category) return;
+  
+    const basePrice = category.basePrice;
+  
+    // urgencyExtra = basePrice × (multiplier - 1)
+    const urgencyObj = urgencyLevels.find(u => u.value === bookingData.urgency);
+    const urgencyExtra = basePrice * (urgencyObj.multiplier - 1);
+  
+    // ⭐ FINAL CORRECT TOTAL
+    const total = basePrice + urgencyExtra;
+  
     setBookingData(prev => ({
       ...prev,
-      basePrice: finalBasePrice,
-      surgeMultiplier,
-      insuranceCost,
-      totalPrice
-    }))
-  }
+      basePrice: basePrice,
+      urgencyExtra: urgencyExtra,
+      totalPrice: total   // THIS FIXES YOUR ISSUE
+    }));
+  };
+  
+  
 
   const findAvailableWorkers = async () => {
     if (!bookingData.serviceCategory || !bookingData.location) return
@@ -376,10 +371,12 @@ export default function UserBooking() {
   }
 
   const handleUrgencyChange = (urgency) => {
-    updateBookingData('urgency', urgency)
-    setTimeout(calculatePricing, 100)
-  }
-
+    setBookingData(prev => ({
+      ...prev,
+      urgency
+    }));
+  };
+  
   const createBooking = async () => {
     if (!bookingData.selectedWorker) {
       setError('Please select a worker')
@@ -414,7 +411,7 @@ export default function UserBooking() {
         basePrice = base * mult
       }
       const insuranceCost = bookingData.insuranceRequired ? Math.round(basePrice * 0.1) : 0
-      const totalPrice = basePrice + insuranceCost
+      const totalPrice = bookingData.totalPrice
 
       const bookingPayload = {
         workerId: bookingData.selectedWorker._id,
@@ -453,10 +450,11 @@ export default function UserBooking() {
   }
 
   useEffect(() => {
-    if (bookingData.serviceCategory && bookingData.duration) {
-      calculatePricing()
+    if (bookingData.serviceCategory) {
+      calculatePricing();
     }
-  }, [bookingData.serviceCategory, bookingData.duration, bookingData.urgency])
+  }, [bookingData.serviceCategory, bookingData.urgency]);
+  
 
   useEffect(() => {
     if (bookingData.serviceCategory && bookingData.location) {
@@ -466,7 +464,7 @@ export default function UserBooking() {
 
   const renderStepIndicator = () => (
     <div className="step-indicator">
-      {[1, 2, 3, 4, 5].map(step => (
+      {[1, 2, 3, 4].map(step => (
         <div 
           key={step} 
           className={`step ${currentStep >= step ? 'active' : ''} ${currentStep === step ? 'current' : ''}`}
@@ -475,9 +473,8 @@ export default function UserBooking() {
           <div className="step-label">
             {step === 1 && 'Service Details'}
             {step === 2 && 'Location & Time'}
-            {step === 3 && 'Worker Selection'}
-            {step === 4 && 'Pricing & Options'}
-            {step === 5 && 'Confirm Booking'}
+            {step === 3 && 'Pricing & Options'}
+            {step === 4 && 'Confirm Booking'}
           </div>
         </div>
       ))}
@@ -590,32 +587,32 @@ export default function UserBooking() {
         />
       </div>
 
-      <div className="form-group">
-        <label className="form-label">Date</label>
-        <input
-          type="date"
-          className="form-input"
-          min={new Date().toISOString().split('T')[0]}
-          value={bookingData.date}
-          onChange={e => handleDateChange(e.target.value)}
-        />
-      </div>
+    
 
-      <div className="form-group">
-        <label className="form-label">Time Slot</label>
-        <div className="time-slot-grid">
-          {['Morning (6 AM - 12 PM)', 'Afternoon (12 PM - 6 PM)', 'Evening (6 PM - 10 PM)', 'Night (10 PM - 6 AM)'].map(slot => (
-            <label key={slot} className="time-slot-option">
-              <input
-                type="radio"
-                name="timeSlot"
-                value={slot}
-                checked={bookingData.timeSlot === slot}
-                onChange={e => handleTimeSlotChange(e.target.value)}
-              />
-              <span>{slot}</span>
-            </label>
-          ))}
+<     div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Date *</label>
+          <input
+            type="date"
+            className="form-input"
+            min={new Date().toISOString().split('T')[0]}
+            value={bookingData.date}
+            onChange={e => updateBookingData('date', e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Time Slot *</label>
+          <select
+            className="form-input"
+            value={bookingData.timeSlot}
+            onChange={e => updateBookingData('timeSlot', e.target.value)}
+          >
+            <option value="">Select a time</option>
+            <option>Morning (6 AM - 12 PM)</option>
+            <option>Afternoon (12 PM - 6 PM)</option>
+            <option>Evening (6 PM - 10 PM)</option>
+          </select>
         </div>
       </div>
 
@@ -653,342 +650,181 @@ export default function UserBooking() {
     </div>
   )
 
-  const renderWorkerSelection = () => (
-    <div className="booking-step">
-      <h2>Choose Your Worker</h2>
-      <p>AI-recommended workers based on your requirements</p>
-      
-      <div className="worker-filters">
-        <h4>Filters</h4>
-        <div className="filter-controls">
-          <div className="filter-group">
-            <label>Minimum Rating</label>
-            <input
-              type="range"
-              min="1"
-              max="5"
-              step="0.5"
-              value={bookingData.workerFilters.minRating}
-              onChange={e => updateBookingData('workerFilters', {
-                ...bookingData.workerFilters,
-                minRating: parseFloat(e.target.value)
-              })}
-            />
-            <span>{bookingData.workerFilters.minRating}+</span>
-          </div>
-          
-          <div className="filter-group">
-            <label>Max Distance</label>
-            <input
-              type="range"
-              min="1"
-              max="50"
-              value={bookingData.workerFilters.maxDistance}
-              onChange={e => updateBookingData('workerFilters', {
-                ...bookingData.workerFilters,
-                maxDistance: parseInt(e.target.value)
-              })}
-            />
-            <span>{bookingData.workerFilters.maxDistance} km</span>
-          </div>
-          
-          <label className="filter-checkbox">
-            <input
-              type="checkbox"
-              checked={bookingData.workerFilters.verifiedOnly}
-              onChange={e => updateBookingData('workerFilters', {
-                ...bookingData.workerFilters,
-                verifiedOnly: e.target.checked
-              })}
-            />
-            Verified Workers Only
-          </label>
-          
-          <label className="filter-checkbox">
-            <input
-              type="checkbox"
-              checked={bookingData.workerFilters.availableNow}
-              onChange={e => updateBookingData('workerFilters', {
-                ...bookingData.workerFilters,
-                availableNow: e.target.checked
-              })}
-            />
-            Available Now
-          </label>
-        </div>
-      </div>
 
-      {loading ? (
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Finding the best workers for you...</p>
-        </div>
-      ) : (
-        <div className="workers-grid">
-          {availableWorkers.map(worker => (
-            <div key={worker._id} className="worker-card">
-              <div className="worker-header">
+  
+      const renderPricingOptions = () => (
+        <div className="booking-step">
+          <h2>Pricing & Additional Options</h2>
+          <p>Review pricing and select additional services</p>
+      
+          {/* ---- PRICE BREAKDOWN ---- */}
+          <div key={bookingData.totalPrice} className="pricing-breakdown">
+            <h3>Price Breakdown</h3>
+
+            <div className="price-item">
+              <span>Base Price</span>
+              <span>₹{bookingData.basePrice}</span>
+            </div>
+
+            {bookingData.urgency !== "normal" && (
+              <div className="price-item urgency">
+                <span>{urgencyLevels.find(u => u.value === bookingData.urgency)?.label} Service</span>
+                <span>+₹{bookingData.urgencyExtra}</span>
+              </div>
+            )}
+
+            <div className="price-item total">
+              <span>Total</span>
+              <span>₹{bookingData.totalPrice}</span>
+            </div>
+          </div>
+
+      
+         
+      
+          {/* ---- SELECTED WORKER (READ-ONLY) ---- */}
+          <div className="selected-worker-summary">
+            <h3>Selected Worker</h3>
+      
+            {bookingData.selectedWorker ? (
+              <div className="worker-summary readonly">
                 <div className="worker-avatar">
-                  {worker.userId?.name?.charAt(0) || 'W'}
+                  {bookingData.selectedWorker.userId?.name?.charAt(0) || "W"}
                 </div>
-                <div className="worker-info">
-                  <h4>{worker.userId?.name || 'Worker'}</h4>
-                  <div className="worker-badges">
-                    {worker.verified && <span className="badge verified">✓ Verified</span>}
-                    {worker.trustScore >= 80 && <span className="badge trusted">⭐ Trusted</span>}
-                    {worker.membershipTier === 'premium' && <span className="badge premium">👑 Premium</span>}
-                  </div>
-                </div>
-                <div className="worker-rating">
-                  <span className="rating">{worker.rating || 0}</span>
-                  <span className="rating-label">★</span>
-                </div>
-              </div>
-              
-              <div className="worker-details">
-                <p className="worker-description">{worker.description || 'Professional service provider'}</p>
-                
-                <div className="worker-stats">
-                  <div className="stat">
-                    <span className="stat-label">Trust Score</span>
-                    <span className="stat-value">{worker.trustScore || 0}%</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-label">Completed</span>
-                    <span className="stat-value">{worker.completedBookings || 0}</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-label">Distance</span>
-                    <span className="stat-value">
-                      {calculateDistance(
-                        bookingData.coordinates.lat,
-                        bookingData.coordinates.lng,
-                        worker.location.coordinates[1],
-                        worker.location.coordinates[0]
-                      ).toFixed(1)} km
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="worker-skills">
-                  {worker.languages?.slice(0, 3).map(lang => (
-                    <span key={lang} className="skill-tag">{lang}</span>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="worker-actions">
-                <button 
-                  className="btn btn-outline"
-                  onClick={() => selectWorker(worker)}
-                >
-                  View Details
-                </button>
-                <button 
-                  className="btn btn-primary"
-                  onClick={() => confirmWorker(worker)}
-                >
-                  Select & Continue
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {availableWorkers.length === 0 && !loading && (
-        <div className="no-workers">
-          <p>No workers available for your requirements.</p>
-          <p>Try adjusting your filters or location.</p>
-        </div>
-      )}
-    </div>
-  )
-
-  const renderPricingOptions = () => (
-    <div className="booking-step">
-      <h2>Pricing & Additional Options</h2>
-      <p>Review pricing and select additional services</p>
       
-      <div className="pricing-breakdown">
-        <h3>Price Breakdown</h3>
-        
-        <div className="price-item">
-          <span>Base Price ({bookingData.duration})</span>
-          <span>₹{bookingData.basePrice}</span>
-        </div>
-        
-        {bookingData.surgeMultiplier > 1 && (
-          <div className="price-item surge">
-            <span>Surge Pricing ({(bookingData.surgeMultiplier - 1) * 100}%)</span>
-            <span>+₹{Math.round(bookingData.basePrice * (bookingData.surgeMultiplier - 1))}</span>
+                <div className="worker-info">
+                  <h4>
+                    {bookingData.selectedWorker.userId?.name ||
+                      bookingData.selectedWorker.name ||
+                      "Worker"}
+                  </h4>
+      
+                  <p>{bookingData.selectedWorker.description || "Professional service provider"}</p>
+      
+                  <div className="worker-badges">
+                    {bookingData.selectedWorker.verified && (
+                      <span className="badge verified">✓ Verified</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="no-worker">
+                <p>No worker selected. Please go back to Services.</p>
+              </div>
+            )}
           </div>
-        )}
-        
-        {bookingData.urgency !== 'normal' && (
-          <div className="price-item urgency">
-            <span>{urgencyLevels.find(u => u.value === bookingData.urgency)?.label} Service</span>
-            <span>+₹{Math.round(bookingData.basePrice * (urgencyLevels.find(u => u.value === bookingData.urgency)?.multiplier - 1))}</span>
-          </div>
-        )}
-        
-        <div className="price-item total">
-          <span>Total</span>
-          <span>₹{bookingData.totalPrice}</span>
+      
+          {/* ---- NAVIGATION ---- */}
+          {/* <div className="form-navigation">
+            <button className="btn btn-outline" onClick={prevStep}>
+              ← Previous
+            </button>
+      
+            <button
+              className="btn btn-primary"
+              onClick={() => setCurrentStep(4)}
+              disabled={!bookingData.selectedWorker}
+            >
+              Next →
+            </button>
+          </div> */}
         </div>
-      </div>
+      );
+      
 
-      <div className="additional-options">
-        <h3>Additional Options</h3>
-        
-        <div className="option-group">
-          <label className="option-checkbox">
-            <input
-              type="checkbox"
-              checked={bookingData.insuranceRequired}
-              onChange={e => updateBookingData('insuranceRequired', e.target.checked)}
-            />
-            <div className="option-content">
-              <h4>Service Insurance</h4>
-              <p>Protection against accidental damage or unsatisfactory service</p>
-              <span className="option-price">+₹{Math.round(bookingData.totalPrice * 0.1)}</span>
-            </div>
-          </label>
-        </div>
-        
-        <div className="option-group">
-          <label className="option-checkbox">
-            <input
-              type="checkbox"
-              checked={bookingData.backgroundCheckRequired}
-              onChange={e => updateBookingData('backgroundCheckRequired', e.target.checked)}
-            />
-            <div className="option-content">
-              <h4>Enhanced Background Check</h4>
-              <p>Additional verification for premium safety</p>
-              <span className="option-price">+₹200</span>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <div className="selected-worker-summary">
-        <h3>Selected Worker</h3>
-        {bookingData.selectedWorker && (
-          <div className="worker-summary">
-            <div className="worker-avatar">
-              {bookingData.selectedWorker.userId?.name?.charAt(0) || 'W'}
-            </div>
-            <div className="worker-info">
-              <h4>{bookingData.selectedWorker.userId?.name || 'Worker'}</h4>
-              <p>{bookingData.selectedWorker.description || 'Professional service provider'}</p>
-              <div className="worker-badges">
-                <span className="badge rating">★ {bookingData.selectedWorker.rating || 0}</span>
-                <span className="badge trust">{bookingData.selectedWorker.trustScore || 0}% Trust</span>
+      const renderConfirmation = () => (
+        <div className="booking-step">
+          <h2>Confirm Your Booking</h2>
+          <p>Review all details before confirming</p>
+      
+          <div className="booking-summary">
+            <div className="summary-section">
+              <h3>Service Details</h3>
+              <div className="summary-item">
+                <span>Service:</span>
+                <span>{serviceCategories[bookingData.serviceCategory]?.name}</span>
+              </div>
+              <div className="summary-item">
+                <span>Duration:</span>
+                <span>{durationOptions.find(d => d.value === bookingData.duration)?.label}</span>
+              </div>
+              <div className="summary-item">
+                <span>Date & Time:</span>
+                <span>{bookingData.date} - {bookingData.timeSlot}</span>
+              </div>
+              <div className="summary-item">
+                <span>Location:</span>
+                <span>{bookingData.location}</span>
               </div>
             </div>
+      
+            <div className="summary-section">
+              <h3>Worker Details</h3>
+              {bookingData.selectedWorker && (
+                <>
+                  <div className="summary-item">
+                    <span>Name:</span>
+                    <span>{bookingData.selectedWorker.userId?.name}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>Rating:</span>
+                    <span>★ {bookingData.selectedWorker.rating || 0}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>Trust Score:</span>
+                    <span>{bookingData.selectedWorker.trustScore || 0}%</span>
+                  </div>
+                </>
+              )}
+            </div>
+      
+            <div className="summary-section">
+              <h3>Pricing</h3>
+      
+              <div className="summary-item">
+                <span>Base Price:</span>
+                <span>₹{bookingData.basePrice}</span>
+              </div>
+      
+              {bookingData.urgency !== "normal" && (
+                <div className="summary-item">
+                  <span>Urgency Charge:</span>
+                  <span>+₹{bookingData.urgencyExtra}</span>
+                </div>
+              )}
+      
+              <div className="summary-item total">
+                <span>Total Amount:</span>
+                <span>₹{bookingData.totalPrice}</span>
+              </div>
+            </div>
+          </div>
+      
+          <div className="booking-actions">
             <button 
               className="btn btn-outline"
-              onClick={() => setShowWorkerDetails(true)}
+              onClick={prevStep}
             >
-              Change
+              ← Back
+            </button>
+            <button 
+              className="btn btn-primary"
+              onClick={createBooking}
+              disabled={loading}
+            >
+              {loading ? 'Creating Booking...' : 'Confirm & Book Now'}
             </button>
           </div>
-        )}
-      </div>
-    </div>
-  )
-
-  const renderConfirmation = () => (
-    <div className="booking-step">
-      <h2>Confirm Your Booking</h2>
-      <p>Review all details before confirming</p>
+        </div>
+      );
       
-      <div className="booking-summary">
-        <div className="summary-section">
-          <h3>Service Details</h3>
-          <div className="summary-item">
-            <span>Service:</span>
-            <span>{serviceCategories[bookingData.serviceCategory]?.name}</span>
-          </div>
-          <div className="summary-item">
-            <span>Duration:</span>
-            <span>{durationOptions.find(d => d.value === bookingData.duration)?.label}</span>
-          </div>
-          <div className="summary-item">
-            <span>Date & Time:</span>
-            <span>{bookingData.date} - {bookingData.timeSlot}</span>
-          </div>
-          <div className="summary-item">
-            <span>Location:</span>
-            <span>{bookingData.location}</span>
-          </div>
-        </div>
-        
-        <div className="summary-section">
-          <h3>Worker Details</h3>
-          {bookingData.selectedWorker && (
-            <>
-              <div className="summary-item">
-                <span>Name:</span>
-                <span>{bookingData.selectedWorker.userId?.name}</span>
-              </div>
-              <div className="summary-item">
-                <span>Rating:</span>
-                <span>★ {bookingData.selectedWorker.rating || 0}</span>
-              </div>
-              <div className="summary-item">
-                <span>Trust Score:</span>
-                <span>{bookingData.selectedWorker.trustScore || 0}%</span>
-              </div>
-            </>
-          )}
-        </div>
-        
-        <div className="summary-section">
-          <h3>Pricing</h3>
-          <div className="summary-item">
-            <span>Base Price:</span>
-            <span>₹{bookingData.basePrice}</span>
-          </div>
-          {bookingData.insuranceRequired && (
-            <div className="summary-item">
-              <span>Insurance:</span>
-              <span>+₹{bookingData.insuranceCost}</span>
-            </div>
-          )}
-          <div className="summary-item total">
-            <span>Total Amount:</span>
-            <span>₹{bookingData.totalPrice}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="booking-actions">
-        <button 
-          className="btn btn-outline"
-          onClick={prevStep}
-        >
-          ← Back
-        </button>
-        <button 
-          className="btn btn-primary"
-          onClick={createBooking}
-          disabled={loading}
-        >
-          {loading ? 'Creating Booking...' : 'Confirm & Book Now'}
-        </button>
-      </div>
-    </div>
-  )
-
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1: return renderServiceDetails()
       case 2: return renderLocationTime()
-      case 3: return renderWorkerSelection()
-      case 4: return renderPricingOptions()
-      case 5: return renderConfirmation()
+      case 3: return renderPricingOptions()
+      case 4: return renderConfirmation()
       default: return renderServiceDetails()
     }
   }
@@ -999,20 +835,6 @@ export default function UserBooking() {
         <h1>Book Your Service</h1>
         <p>Get professional services at your doorstep</p>
         
-        {/* <div className="header-actions">
-          <button 
-            className="btn btn-outline"
-            onClick={() => setShowAIChatbot(true)}
-          >
-            🤖 AI Assistant
-          </button>
-          <button 
-            className="btn btn-outline"
-            onClick={() => setShowChat(true)}
-          >
-            💬 Live Chat
-          </button>
-        </div> */}
       </div>
       
       {renderStepIndicator()}
@@ -1023,7 +845,7 @@ export default function UserBooking() {
         {error && <div className="error-message">{error}</div>}
         
         <div className="form-navigation">
-          {currentStep > 1 && (
+          {currentStep > 1 && currentStep !== 2 && (
             <button 
               className="btn btn-outline"
               onClick={prevStep}

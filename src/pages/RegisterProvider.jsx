@@ -4,6 +4,19 @@ import { api } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import './WorkerRegistration.css'
 
+
+const serviceCategoryPrices = {
+  driver: 250,
+  cook: 400,
+  plumber: 300,
+  electrician: 350,
+  cleaner: 250,
+  maid: 200,
+  gardener: 200,
+  other: 200,
+};
+
+
 export default function RegisterProvider() {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,9 +33,6 @@ export default function RegisterProvider() {
     emergencyWork: false,
     emergencyCharge: 100,
     // Service Pricing
-    servicePrice: 500, // Default ₹5.00 in paise
-    pricePerHour: 0,
-    minimumCharge: 0,
     bankDetails: {
       accountNumber: '',
       ifscCode: '',
@@ -123,6 +133,11 @@ export default function RegisterProvider() {
     
     setIsLoading(true)
     setError('')
+    if (!formData.backgroundCheck) {
+      setError("You must agree to background verification.");
+      setIsLoading(false);
+      return;
+  }
     
     try {
       const registrationData = {
@@ -258,8 +273,13 @@ export default function RegisterProvider() {
                 <option value="cleaner">Cleaner</option>
                 <option value="maid">Maid</option>
                 <option value="gardener">Gardener</option>
-                <option value="other">Other</option>
               </select>
+              {formData.category && (
+                <div className="fixed-price-box">
+                  <strong>Flexify Fixed Price:</strong> ₹{serviceCategoryPrices[formData.category]}
+                </div>
+              )}
+
             </div>
             
             <div className="form-group">
@@ -401,7 +421,7 @@ export default function RegisterProvider() {
                   checked={formData.backgroundCheck}
                   onChange={e => updateFormData('backgroundCheck', e.target.checked)}
                 />
-                <span>I agree to background verification</span>
+                <span>I agree to background verification *</span>
               </label>
             </div>
             
@@ -429,54 +449,9 @@ export default function RegisterProvider() {
                 <span>Available for emergency work</span>
               </label>
             </div>
-            
-            {/* {formData.emergencyWork && (
-              <div className="form-group">
-                <label htmlFor="emergencyCharge" className="form-label">Emergency Charge</label>
-                <input
-                  id="emergencyCharge"
-                  type="number"
-                  className="form-input"
-                  placeholder="Additional charge for emergency work"
-                  value={formData.emergencyCharge}
-                  onChange={e => updateFormData('emergencyCharge', parseInt(e.target.value))}
-                />
-              </div>
-            )} */}
+          </div>   {/* <-- FIXED: this closing div was missing */}
 
-            {/* Service Pricing Section */}
-            <div className="form-section">
-              <h3>Service Pricing</h3>
-              <p className="form-description">Set your service rates (all amounts in INR)</p>
-              
-              <div className="form-group">
-                <label htmlFor="servicePrice" className="form-label">Base Service Price *</label>
-                <input
-                  id="servicePrice"
-                  type="number"
-                  className="form-input"
-                  placeholder="Enter your base service price"
-                  value={formData.servicePrice ? (formData.servicePrice / 100) : 5} // Convert paise to rupees for display
-                  onChange={(e) => updateFormData('servicePrice', Math.round(parseFloat(e.target.value || 0) * 100) || 500)}
-                  min="1"
-                  step="0.01"
-                  required
-                />
-                <small className="form-help">This is your base price for the service (minimum ₹1)</small>
-              </div>
-              
-
-              <div className="pricing-info">
-                <div className="info-card">
-                  <h4>💰 Commission Structure</h4>
-                  <p>• Platform commission: <strong>10%</strong></p>
-                  <p>• Your earnings: <strong>90%</strong></p>
-                  <p>• Example: If you charge ₹100, you earn ₹90</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
+          {/* FINANCIAL SECTION */}
           <div className="form-section">
             <h2>Financial Information</h2>
             
@@ -547,8 +522,10 @@ export default function RegisterProvider() {
               </label>
             </div>
           </div>
-          
+
           {error && <div className="error-message">{error}</div>}
+
+          
           
           <div className="form-navigation">
             <button 
@@ -559,6 +536,7 @@ export default function RegisterProvider() {
               {isLoading ? 'Creating Account...' : 'Create Worker Account'}
             </button>
           </div>
+
         </form>
       </div>
     </div>

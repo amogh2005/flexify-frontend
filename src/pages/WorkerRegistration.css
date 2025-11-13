@@ -820,6 +820,16 @@ textarea.form-input {
   font-weight: 500;
 }
 
+.fixed-price-box {
+  margin-top: 8px;
+  padding: 10px;
+  background: #f1f5f9;
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+
 .file-preview {
   display: flex;
   align-items: center;
