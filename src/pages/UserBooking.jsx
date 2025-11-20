@@ -772,8 +772,8 @@ export default function UserBooking() {
                     <span>★ {bookingData.selectedWorker.rating || 0}</span>
                   </div>
                   <div className="summary-item">
-                    <span>Trust Score:</span>
-                    <span>{bookingData.selectedWorker.trustScore || 0}%</span>
+                    {/* <span>Trust Score:</span>
+                    <span>{bookingData.selectedWorker.trustScore || 0}%</span> */}
                   </div>
                 </>
               )}

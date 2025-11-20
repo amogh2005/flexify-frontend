@@ -12,7 +12,7 @@ const serviceCategoryPrices = {
   electrician: 350,
   cleaner: 250,
   maid: 200,
-  gardener: 200,
+  // gardener: 200,
   other: 200,
 };
 
@@ -272,7 +272,7 @@ export default function RegisterProvider() {
                 <option value="electrician">Electrician</option>
                 <option value="cleaner">Cleaner</option>
                 <option value="maid">Maid</option>
-                <option value="gardener">Gardener</option>
+                {/* <option value="gardener">Gardener</option> */}
               </select>
               {formData.category && (
                 <div className="fixed-price-box">
