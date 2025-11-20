@@ -117,8 +117,8 @@ export default function AdminProviders() {
             <option value="electrician">Electrician</option>
             <option value="cleaner">Cleaner</option>
             <option value="maid">Maid</option>
-            <option value="gardener">Gardener</option>
-            <option value="other">Other</option>
+            {/* <option value="gardener">Gardener</option> */}
+            {/* <option value="other">Other</option> */}
           </select>
         </div>
         

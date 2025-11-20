@@ -37,7 +37,6 @@ export default function NavBar() {
         <nav className="navbar-nav">
           {!role ? (
             <>
-              <Link to="/services" className="nav-link book-now-link">🚀 Book Now</Link>
               <div className="nav-dropdown">
                 <span className="nav-link dropdown-toggle">
                   🔍 Find Services ▼
@@ -71,7 +70,6 @@ export default function NavBar() {
             <>
               {role === 'user' && (
                 <>
-                  <Link to="/services" className="nav-link book-now-link">🚀 Book Now</Link>
                   <div className="nav-dropdown">
                     <span className="nav-link dropdown-toggle">🔍 Find Services ▼</span>
                     <div className="dropdown-menu">
@@ -85,6 +83,8 @@ export default function NavBar() {
                   </div>
                   
                   <Link to="/bookings" className="nav-link">📋 My Bookings</Link>
+                  <Link to="/support" className="nav-link">❓ Support</Link>
+
                   <div className="nav-dropdown">
                     <span className="nav-link dropdown-toggle">{user?.name || 'User'} ▼</span>
                     <div className="dropdown-menu">
@@ -104,6 +104,9 @@ export default function NavBar() {
                   <Link to="/provider/earnings" className="nav-link">
                     💰 Earnings
                   </Link>
+
+                  <Link to="/support" className="nav-link">❓ Support</Link>
+
 
 
                   <div className="nav-dropdown">

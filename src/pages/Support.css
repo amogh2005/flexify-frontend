@@ -1,0 +1,92 @@
+.support-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+  
+  .support-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .support-header h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #1e3a8a;
+  }
+  
+  .support-header p {
+    font-size: 1.1rem;
+    color: #64748b;
+  }
+  
+  .support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+  }
+  
+  .support-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+  }
+  
+  .support-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+  }
+  
+  .icon-box {
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  
+  .info-text {
+    margin: 10px 0;
+    color: #6b7280;
+  }
+  
+  .highlight {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  
+  .highlight:hover {
+    text-decoration: underline;
+  }
+  
+  .link {
+    cursor: pointer;
+  }
+  
+  .clickable:hover {
+    background: #f8fafc;
+  }
+  
+  .btn-primary {
+    margin-top: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+  }
+  
+  .btn-primary:hover {
+    background: #1d4ed8;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  

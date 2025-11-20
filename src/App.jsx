@@ -33,6 +33,7 @@ import './App.css'
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
 
 import ProviderEarnings from './pages/ProviderEarnings' // adjust path
+import Support from "./pages/Support";
 
 
 
@@ -239,7 +240,7 @@ function Home() {
             <h3>About Us</h3>
             <p>Flexify connects you with trusted, verified service providers in your area. We make it easy to find and book quality services for all your needs.</p>
             <p style={{ marginTop: '1rem' }}>
-              <strong>Phone:</strong> <a href="tel:+917676838995" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>+91 7676838995</a><br/>
+              <strong>Phone:</strong> <a href="tel:+91**********" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>+91 **********</a><br/>
               <strong>Email:</strong> <a href="mailto:nithinnmallikarjuna@gmail.com" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>nithinnmallikarjuna@gmail.com</a>
             </p>
             <div className="social-links">
@@ -362,6 +363,8 @@ export default function App() {
             <Route path="/dashboard/provider" element={<ProviderDashboard />} />
             {/* <Route path="/provider/earnings" element={<ProviderDashboard initialTab="earnings" />} /> */}
             <Route path="/provider/earnings" element={<ProviderEarnings />} />
+            <Route path="/dashboard/support" element={<Support />} />
+            <Route path="/support" element={<Support />} />
 
           </Routes>
         </BrowserRouter>
