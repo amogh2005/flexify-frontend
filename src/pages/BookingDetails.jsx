@@ -78,7 +78,15 @@ export default function BookingDetails() {
         )}
         {role === 'provider' && (
           <div style={{ marginTop: 8 }}>
-            <strong>Customer:</strong> {booking.userId?.name} ({booking.userId?.email})
+            <div>
+              <strong>Customer:</strong> {booking.userId?.name}
+            </div>
+            <div>
+              <strong>Email:</strong> {booking.userId?.email || 'Not provided'}
+            </div>
+            <div>
+              <strong>Phone:</strong> {booking.userId?.phone || 'Not provided'}
+            </div>
           </div>
         )}
       </div>
