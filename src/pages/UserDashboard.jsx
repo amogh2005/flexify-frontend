@@ -100,7 +100,7 @@ export default function UserDashboard() {
       <div className="quick-actions">
         <button 
           onClick={() => navigate('/services')}
-          className="btn btn-primary"
+          className="btn btn-outline"
         >
           🛠️ Book a Service
         </button>

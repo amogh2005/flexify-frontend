@@ -4,7 +4,7 @@ import { api } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import LeafletMap from '../components/LeafletMap'
 
-export default function ProviderDashboard() {
+export default function ProviderDashboard({ initialTab = "overview" }) {  
   const navigate = useNavigate()
   const { user, role } = useAuth()
   const [provider, setProvider] = useState(null)
@@ -27,7 +27,7 @@ export default function ProviderDashboard() {
     availableBalance: 0,
     recentPayments: []
   })
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState(initialTab)
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [showActionModal, setShowActionModal] = useState(false)
   const [actionType, setActionType] = useState('')
@@ -264,7 +264,7 @@ export default function ProviderDashboard() {
           break
         case 'complete':
           endpoint = `/bookings/${selectedBooking._id}/complete`
-          data = { finalAmount: actionData.finalAmount }
+          data = {}  // no final amount needed
           break
         default:
           throw new Error('Invalid action type')
@@ -391,7 +391,7 @@ export default function ProviderDashboard() {
           </button>
           <button 
             onClick={() => navigate('/provider/bookings')}
-            className="btn btn-primary"
+            className="btn btn-outline"
           >
             View All Bookings
           </button>
@@ -456,12 +456,12 @@ export default function ProviderDashboard() {
         >
           Completed ({stats.completed})
         </button>
-        <button 
+        {/* <button 
           className={`tab-button ${activeTab === 'earnings' ? 'active' : ''}`}
           onClick={() => setActiveTab('earnings')}
         >
           💰 Earnings
-        </button>
+        </button> */}
       </div>
 
       {/* Tab Content */}
@@ -879,8 +879,8 @@ export default function ProviderDashboard() {
                     placeholder="e.g., 2-3 hours, 1 day"
                   />
                   
-                  <label htmlFor="finalAmount">Final Amount (Optional)</label>
-                  <input
+                  {/* <label htmlFor="finalAmount">Final Amount (Optional)</label> */}
+                  {/* <input
                     id="finalAmount"
                     type="number"
                     value={actionData.finalAmount || ''}
@@ -888,7 +888,7 @@ export default function ProviderDashboard() {
                     placeholder="Final price in dollars"
                     min="0"
                     step="0.01"
-                  />
+                  /> */}
                 </div>
               )}
               
@@ -907,20 +907,11 @@ export default function ProviderDashboard() {
               )}
               
               {actionType === 'complete' && (
-                <div className="form-group">
-                  <label htmlFor="finalAmount">Final Amount *</label>
-                  <input
-                    id="finalAmount"
-                    type="number"
-                    value={actionData.finalAmount || ''}
-                    onChange={(e) => setActionData(prev => ({ ...prev, finalAmount: Number(e.target.value) }))}
-                    placeholder="Final price in dollars"
-                    min="0"
-                    step="0.01"
-                    required
-                  />
-                </div>
+                <p style={{ marginTop: "1rem" }}>
+                  Are you sure you want to mark this work as completed?
+                </p>
               )}
+
             </div>
             
             <div className="modal-actions">

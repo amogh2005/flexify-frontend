@@ -110,14 +110,18 @@
 }
 
 .status-completed {
-  background: #d1fae5;
-  color: #059669;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  color: white;
+  font-weight: 600;
 }
 
+
 .status-cancelled {
-  background: #fee2e2;
-  color: #dc2626;
+  background: linear-gradient(90deg, #ff6b6b, #ff4f4f);
+  color: white;
+  font-weight: 600;
 }
+
 
 .booking-details {
   margin-bottom: 1.5rem;
@@ -161,6 +165,13 @@
   align-items: baseline;
   gap: 0.25rem;
 }
+
+.status-rejected {
+  background: linear-gradient(90deg, #ff8a8a, #ff5c5c);
+  color: white;
+  font-weight: 700;
+}
+
 
 .booking-amount .amount {
   font-size: 1.5rem;

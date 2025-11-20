@@ -334,9 +334,9 @@ export default function Profile() {
                       <option value="plumber">Plumber</option>
                       <option value="electrician">Electrician</option>
                       <option value="cook">Cook</option>
-                      <option value="gardener">Gardener</option>
-                      <option value="mechanic">Mechanic</option>
-                      <option value="other">Other</option>
+                      {/* <option value="gardener">Gardener</option> */}
+                      {/* <option value="mechanic">Mechanic</option> */}
+                      {/* <option value="other">Other</option> */}
                     </select>
                   ) : (
                     <div className="form-display">{provider.category || 'Not specified'}</div>
@@ -551,7 +551,7 @@ export default function Profile() {
                 <div className="status-item">
                   <span className="status-label">Background Check</span>
                   <span className={`status-badge ${provider.backgroundCheck ? 'verified' : 'pending'}`}>
-                    {provider.backgroundCheck ? 'Completed' : 'Pending'}
+                    {provider.verified ? 'Verified' : 'Pending'}
                   </span>
                 </div>
               </div>

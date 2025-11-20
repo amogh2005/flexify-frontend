@@ -32,6 +32,9 @@ import ChatBot from './components/ChatBot'
 import './App.css'
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
 
+import ProviderEarnings from './pages/ProviderEarnings' // adjust path
+
+
 
 function Home() {
   const { role, user } = useAuth()
@@ -356,6 +359,10 @@ export default function App() {
             <Route path="/services/:category" element={<Services />} />
             <Route path="/profile" element={<ProtectedRoute allow={["user","provider","admin"]}><Profile /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/dashboard/provider" element={<ProviderDashboard />} />
+            {/* <Route path="/provider/earnings" element={<ProviderDashboard initialTab="earnings" />} /> */}
+            <Route path="/provider/earnings" element={<ProviderEarnings />} />
+
           </Routes>
         </BrowserRouter>
       </SocketProvider>

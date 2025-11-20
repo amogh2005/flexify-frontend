@@ -25,7 +25,8 @@ export default function ProviderBookings() {
       'confirmed': 'status-confirmed',
       'in-progress': 'status-in-progress',
       'completed': 'status-completed',
-      'cancelled': 'status-cancelled'
+      'cancelled': 'status-cancelled',
+      'rejected': 'status-rejected'   
     }
     return `status-badge ${statusClasses[status] || 'status-pending'}`
   }
@@ -107,23 +108,26 @@ export default function ProviderBookings() {
         >
           All ({bookings.length})
         </button>
-        <button 
-          className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
-          onClick={() => setFilter('pending')}
-        >
-          Pending ({bookings.filter(b => b.status === 'pending').length})
-        </button>
-        <button 
-          className={`filter-btn ${filter === 'confirmed' ? 'active' : ''}`}
-          onClick={() => setFilter('confirmed')}
-        >
-          Confirmed ({bookings.filter(b => b.status === 'confirmed').length})
-        </button>
+
         <button 
           className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
           onClick={() => setFilter('completed')}
         >
           Completed ({bookings.filter(b => b.status === 'completed').length})
+        </button>
+
+        <button 
+          className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
+          onClick={() => setFilter('cancelled')}
+        >
+          Cancelled ({bookings.filter(b => b.status === 'cancelled').length})
+        </button>
+
+        <button 
+          className={`filter-btn ${filter === 'rejected' ? 'active' : ''}`}
+          onClick={() => setFilter('rejected')}
+        >
+          Rejected ({bookings.filter(b => b.status === 'rejected').length})
         </button>
       </div>
 
@@ -151,7 +155,7 @@ export default function ProviderBookings() {
                 </div>
                 <div className="detail-row">
                   <span className="label">Customer:</span>
-                  <span className="value">{booking.user?.name || 'Unknown'}</span>
+                  <span className="value">{booking.userId?.name || 'Unknown'}</span>
                 </div>
                 <div className="detail-row">
                   <span className="label">Date:</span>
@@ -173,7 +177,7 @@ export default function ProviderBookings() {
 
               <div className="booking-footer">
                 <div className="booking-amount">
-                  <span className="amount">INR {booking.amount || '0'}</span>
+                  <span className="amount">INR {(booking.amount / 100).toFixed(2)}</span>
                   <span className="currency">{booking.currency || 'INR'}</span>
                 </div>
                 <div className="booking-actions">

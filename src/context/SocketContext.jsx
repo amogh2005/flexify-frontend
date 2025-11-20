@@ -59,6 +59,17 @@ export function SocketProvider({ children }) {
         addNotification(data);
       });
 
+      // ⭐ AUTO-CANCEL NOTIFICATION ⭐
+      newSocket.on("booking-auto-cancelled", (data) => {
+        console.log("⛔ Booking auto-cancelled:", data);
+        addNotification({
+          type: "auto-cancelled",
+          message: data.message,
+          bookingId: data.bookingId
+        });
+      });
+
+
       newSocket.on("payment-confirmed", (data) => {
         console.log("💸 Payment confirmed:", data);
         addNotification(data);

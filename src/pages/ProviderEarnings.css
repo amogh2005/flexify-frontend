@@ -1,0 +1,108 @@
+.earnings-container {
+    padding: 20px 30px;
+    max-width: 1400px;
+    margin: auto;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  /* Gradient header card layout */
+  .earnings-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(90deg, #6a5acd, #7b61ff, #915eff);
+    border-radius: 12px;
+    color: white;
+  }
+  
+  .earn-card {
+    background: white;
+    color: black;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .amount {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  
+  .green {
+    color: #0f9d58 !important;
+  }
+  
+  .red {
+    color: #ff5252 !important;
+  }
+  
+  .section-title {
+    margin-top: 35px;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  
+  /* Payment List */
+  .payment-box {
+    background: white;
+    padding: 18px;
+    margin: 15px 0;
+    border-radius: 12px;
+    border: 1px solid #eee;
+  }
+  
+  .payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .payment-date {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  /* Commission Structure */
+  .commission-box {
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .commission-table .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .note {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .pending-pay {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    color: #d97706; /* Amber - highlight pending */
+    font-weight: 600;
+  }
+  
+  .limit-warning {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: #dc2626; /* Red - warning */
+    font-weight: 600;
+  }
+  

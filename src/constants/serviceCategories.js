@@ -42,13 +42,13 @@ export const serviceCategories = {
     skills: ['Deep Cleaning', 'Laundry', 'Cooking', 'Pet Care', 'Elder Care'],
     description: 'Professional housekeeping and cleaning services'
   },
-  'gardener': {
-    name: 'Gardening Services',
-    icon: '🌱',
-    basePrice: 300,
-    skills: ['Lawn Care', 'Plant Care', 'Landscaping', 'Tree Trimming', 'Garden Design'],
-    description: 'Professional gardening and landscaping services'
-  },
+  // 'gardener': {
+  //   name: 'Gardening Services',
+  //   icon: '🌱',
+  //   basePrice: 300,
+  //   skills: ['Lawn Care', 'Plant Care', 'Landscaping', 'Tree Trimming', 'Garden Design'],
+  //   description: 'Professional gardening and landscaping services'
+  // },
   'mechanic': {
     name: 'Automotive Services',
     icon: '🔧',

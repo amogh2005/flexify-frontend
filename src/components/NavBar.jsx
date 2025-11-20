@@ -99,13 +99,13 @@ export default function NavBar() {
               {role === 'provider' && (
                 <>
                   <Link to="/provider/bookings" className="nav-link">📋 Bookings</Link>
-                  <div className="nav-dropdown">
-                    <span className="nav-link dropdown-toggle">💰 Payments ▼</span>
-                    <div className="dropdown-menu">
-                      <Link to="/provider/payments" className="dropdown-item">Payment Settings</Link>
-                      <Link to="/provider/location" className="dropdown-item">Location Settings</Link>
-                    </div>
-                  </div>
+                  
+
+                  <Link to="/provider/earnings" className="nav-link">
+                    💰 Earnings
+                  </Link>
+
+
                   <div className="nav-dropdown">
                     <span className="nav-link dropdown-toggle">{user?.name || 'Provider'} ▼</span>
                     <div className="dropdown-menu">
