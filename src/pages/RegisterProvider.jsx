@@ -358,7 +358,7 @@ export default function RegisterProvider() {
                 <label htmlFor="idDocument" className="file-upload-label">
                   <span className="upload-icon">📁</span>
                   <span>Choose ID Proof Document</span>
-                  <small>Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
+                  <small>Accepted formats: JPG, PNG(Max 5MB)</small>
                 </label>
                 {formData.idDocumentFile && (
                   <div className="file-preview">
@@ -383,7 +383,7 @@ export default function RegisterProvider() {
               <ul>
                 <li>Admin will verify your identity within 24-48 hours</li>
                 <li>Ensure all text is clearly visible and readable</li>
-                <li>You'll receive notification once verification is complete</li>
+                {/* <li>You'll receive notification once verification is complete</li> */}
                 <li>Account will be activated after successful verification</li>
               </ul>
             </div>
@@ -420,6 +420,7 @@ export default function RegisterProvider() {
                   type="checkbox"
                   checked={formData.backgroundCheck}
                   onChange={e => updateFormData('backgroundCheck', e.target.checked)}
+                  required
                 />
                 <span>I agree to background verification *</span>
               </label>
@@ -463,6 +464,7 @@ export default function RegisterProvider() {
                 placeholder="Account holder name"
                 value={formData.bankDetails.accountHolderName}
                 onChange={e => updateNestedFormData('bankDetails', 'accountHolderName', e.target.value)}
+                required
               />
             </div>
             
@@ -514,11 +516,11 @@ export default function RegisterProvider() {
             <div className="form-group">
               <label className="checkbox-item">
                 <input
-                  type="checkbox"
+                  // type="checkbox"
                   checked={formData.insuranceOpted}
                   onChange={e => updateFormData('insuranceOpted', e.target.checked)}
                 />
-                <span>I want worker insurance coverage</span>
+                {/* <span>I want worker insurance coverage</span> */}
               </label>
             </div>
           </div>
