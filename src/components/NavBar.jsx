@@ -123,12 +123,12 @@ export default function NavBar() {
               {role === 'admin' && (
                 <>
                   <Link to="/dashboard/admin" className="nav-link">⚙️ Admin Panel</Link>
-                  <Link to="/users" className="nav-link">👥 Users</Link>
-                  <Link to="/providers" className="nav-link">🏢 Providers</Link>
+                  <Link to="/admin/users" className="nav-link">👥 Users</Link>
+                  <Link to="/admin/providers" className="nav-link">🏢 Providers</Link>
                   <div className="nav-dropdown">
                     <span className="nav-link dropdown-toggle">{user?.name || 'Admin'} ▼</span>
                     <div className="dropdown-menu">
-                      <Link to="/analytics" className="dropdown-item">Analytics</Link>
+                      {/* <Link to="/analytics" className="dropdown-item">Analytics</Link> */}
                       <button onClick={handleLogout} className="dropdown-item">Logout</button>
                     </div>
                   </div>

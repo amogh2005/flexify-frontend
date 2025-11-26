@@ -80,7 +80,7 @@ export default function ProviderOnboarding() {
               <label>Category</label>
               <select value={form.category} onChange={e => update('category', e.target.value)}>
                 <option value="">Select</option>
-                {['driver','cook','plumber','electrician','cleaner','maid','gardener','other'].map(c => (
+                {['driver','cook','plumber','electrician','cleaner','maid'].map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
