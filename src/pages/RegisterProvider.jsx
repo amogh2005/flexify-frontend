@@ -513,16 +513,7 @@ export default function RegisterProvider() {
               />
             </div>
             
-            <div className="form-group">
-              <label className="checkbox-item">
-                <input
-                  // type="checkbox"
-                  checked={formData.insuranceOpted}
-                  onChange={e => updateFormData('insuranceOpted', e.target.checked)}
-                />
-                {/* <span>I want worker insurance coverage</span> */}
-              </label>
-            </div>
+
           </div>
 
           {error && <div className="error-message">{error}</div>}
