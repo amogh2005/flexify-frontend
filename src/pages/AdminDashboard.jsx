@@ -136,7 +136,7 @@ export default function AdminDashboard() {
                   <h4>{provider.userId?.name || 'Unknown'}</h4>
                   <p><strong>Email:</strong> {provider.userId?.email || 'Unknown'}</p>
                   <p><strong>Category:</strong> {provider.category}</p>
-                  <p><strong>Phone:</strong> {provider.phone || 'Not provided'}</p>
+                  <p><strong>Phone:</strong> {provider.userId?.phone || 'Not provided'}</p>
                   <p><strong>Description:</strong> {provider.description || 'No description'}</p>
                   <p><strong>Applied:</strong> {formatDate(provider.createdAt)}</p>
                   
